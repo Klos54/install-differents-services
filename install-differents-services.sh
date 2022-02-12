@@ -40,7 +40,7 @@ case $choise in
 	apt upgrade -y
 	apt install -y zabbix-server-mysql zabbix-frontend-php zabbix-nginx-conf zabbix-sql-scripts zabbix-agent mariadb-server
 	echo "Mot de passe de l'utilisateur mysql zabbix"
-	read -p "Password for mysql user zabbix:
+	read -p "Password for mysql zabbix user:
 	" password
 	echo "create database zabbix character set utf8 collate utf8_bin;" | mysql
 	echo "create user zabbix@localhost identified by '$password';" | mysql
@@ -48,7 +48,8 @@ case $choise in
 	echo "Entrez à nouveau votre mot de passe récemment créé"
 	echo "Enter again your password recently created"
 	zcat /usr/share/doc/zabbix-sql-scripts/mysql/create.sql.gz | mysql -uzabbix -p zabbix
-	sed -i "s/# DBPassword=/DBPassword\=$password/" /etc/zabbix/zabbix_server.conf
+	sed -i "s/# DBPassword=/# DBPassword=
+	DBPassword\=$password/" /etc/zabbix/zabbix_server.conf
 	sed -i 's/listen 80 default_server;/#listen 80 default_server;/' /etc/nginx/sites-enabled/default
 	sed -i 's/listen [::]:80 default_server;/#listen [::]:80 default_server;/' /etc/nginx/sites-enabled/default
 	systemctl restart zabbix-server zabbix-agent nginx php7.4-fpm
