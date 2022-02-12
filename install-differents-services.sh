@@ -5,6 +5,7 @@ if [ "$(whoami)" != "root" ] ; then
 	exit
 fi
 
+clear
 read -p "	Choose a number on this list:
 	1 - Install Nginx, Mariadb and Vsftpd
 	2 - Install Zabbix Server v5.4, Mariadb, Nginx with php-fpm v7.4
