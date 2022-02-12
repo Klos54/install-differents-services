@@ -16,9 +16,9 @@ case $choise in
 	apt install -y nginx mariadb-server php-fpm vsftpd
 	cat /etc/nginx/sites-enabled/default | sed -e 56,63's/#//' > /etc/nginx/sites-enabled/default
 	cat /etc/nginx/sites-enabled/default | sed -e 62's/fastcgi_pass 127.0.0.1:9000;/#fastcgi_pass 127.0.0.1:9000;/' > /etc/nginx/sites-enabled/default
-	#sed -i 's/index index.html index.htm index.nginx-debian.html;/index index.php index.html index.htm;/' /etc/nginx/sites-enabled/default
-	#systemctl restart nginx
-	#echo "<?php phpinfo(); ?>" > /var/www/html/index.php
+	sed -i 's/index index.html index.htm index.nginx-debian.html;/index index.php index.html index.htm;/' /etc/nginx/sites-enabled/default
+	systemctl restart nginx
+	echo "<?php phpinfo(); ?>" > /var/www/html/index.php
 	#sed -i 's/listen=NO/listen=YES/' /etc/vsftpd.conf
 	#sed -i 's/listen_ipv6=YES/listen_ipv6=NO/' /etc/vsftpd.conf
 	#sed -i 's/#write_enable=YES/write_enable=YES/' /etc/vsftpd.conf
