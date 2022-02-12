@@ -48,8 +48,7 @@ case $choise in
 	echo "Entrez à nouveau votre mot de passe récemment créé"
 	echo "Enter again your password recently created"
 	zcat /usr/share/doc/zabbix-sql-scripts/mysql/create.sql.gz | mysql -uzabbix -p zabbix
-	sed -i "s/# DBPassword=/# DBPassword=
-	DBPassword\=$password/" /etc/zabbix/zabbix_server.conf
+	sed -i "s/# DBPassword=/# DBPassword=DBPassword\=$password/" /etc/zabbix/zabbix_server.conf
 	sed -i 's/listen 80 default_server;/#listen 80 default_server;/' /etc/nginx/sites-enabled/default
 	sed -i 's/listen [::]:80 default_server;/#listen [::]:80 default_server;/' /etc/nginx/sites-enabled/default
 	systemctl restart zabbix-server zabbix-agent nginx php7.4-fpm
