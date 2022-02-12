@@ -11,7 +11,7 @@ read -p "Choose a number on this list:
 
 case $choise in
 	1)
-	update()
+	update
 	apt install -y nginx mariadb-server php-fpm vsftpd
 	cat /etc/nginx/sites-enabled/default | sed -e 56,63's/#//' > /etc/nginx/sites-enabled/default
 	cat /etc/nginx/sites-enabled/default | sed -e 62's/fastcgi_pass 127.0.0.1:9000;/#fastcgi_pass 127.0.0.1:9000;/' > /etc/nginx/sites-enabled/default
@@ -29,10 +29,8 @@ case $choise in
 	;;
 	
 	2)
-	cd /tmp
-	wget https://repo.zabbix.com/zabbix/5.4/debian/pool/main/z/zabbix-release/zabbix-release_5.4-1+debian11_all.deb
-	dpkg -i zabbix-release_5.4-1+debian11_all.deb
-	update()
+	zabbix
+	update
 	apt install -y zabbix-server-mysql zabbix-frontend-php zabbix-nginx-conf zabbix-sql-scripts zabbix-agent mariadb-server
 	echo "Mot de passe de l'utilisateur mysql zabbix"
 	read -p "Password for mysql zabbix user:
@@ -52,10 +50,8 @@ case $choise in
 	;;
 	
 	3)
-	cd /tmp
-	wget https://repo.zabbix.com/zabbix/5.4/debian/pool/main/z/zabbix-release/zabbix-release_5.4-1+debian11_all.deb
-	dpkg -i zabbix-release_5.4-1+debian11_all.deb
-	update()
+	zabbix
+	update
 	apt install zabbix-agent -y
 	read -p "Quelle est l'adresse du serveur Zabbix ?
 	" host
@@ -64,7 +60,7 @@ case $choise in
 	;;
 	
 	4)
-	update()
+	update
 	;;
 	
 	5)
@@ -641,4 +637,11 @@ function update ()
 {
 	apt update
 	apt upgrade -y
+}
+
+function zabbix ()
+{
+	cd /tmp
+	wget https://repo.zabbix.com/zabbix/5.4/debian/pool/main/z/zabbix-release/zabbix-release_5.4-1+debian11_all.deb
+	dpkg -i zabbix-release_5.4-1+debian11_all.deb
 }
