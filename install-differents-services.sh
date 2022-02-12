@@ -14,11 +14,8 @@ case $choise in
 	apt update
 	apt upgrade -y
 	apt install -y nginx mariadb-server php-fpm vsftpd
-	cat /etc/nginx/sites-enabled/default | sed -e 56,63's/#//' >| /etc/nginx/sites-enabled/default.bak1
-	cat /etc/nginx/sites-enabled/default.bak1 | sed -e 62's/fastcgi_pass 127.0.0.1:9000;/#fastcgi_pass 127.0.0.1:9000;/' >| /etc/nginx/sites-enabled/default.bak
-	rm -rf /etc/nginx/sites-enabled/default
-	rm -rf /etc/nginx/sites-enabled/default.bak1
-	mv /etc/nginx/sites-enabled/default.bak /etc/nginx/sites-enabled/default
+	cat /etc/nginx/sites-enabled/default | sed -e 56,63's/#//' > /etc/nginx/sites-enabled/default
+	cat /etc/nginx/sites-enabled/default | sed -e 62's/fastcgi_pass 127.0.0.1:9000;/#fastcgi_pass 127.0.0.1:9000;/' > /etc/nginx/sites-enabled/default
 	sed -i 's/index index.html index.htm index.nginx-debian.html;/index index.php index.html index.htm;/' /etc/nginx/sites-enabled/default
 	systemctl restart nginx
 	echo "<?php phpinfo(); ?>" > /var/www/html/index.php
@@ -48,7 +45,8 @@ case $choise in
 	echo "Entrez à nouveau votre mot de passe récemment créé"
 	echo "Enter again your password recently created"
 	zcat /usr/share/doc/zabbix-sql-scripts/mysql/create.sql.gz | mysql -uzabbix -p zabbix
-	sed -i "s/# DBPassword=/# DBPassword=DBPassword\=$password/" /etc/zabbix/zabbix_server.conf
+	sed -i "s/# DBPassword=/# DBPassword=
+	DBPassword\=$password/" /etc/zabbix/zabbix_server.conf
 	sed -i 's/listen 80 default_server;/#listen 80 default_server;/' /etc/nginx/sites-enabled/default
 	sed -i 's/listen [::]:80 default_server;/#listen [::]:80 default_server;/' /etc/nginx/sites-enabled/default
 	systemctl restart zabbix-server zabbix-agent nginx php7.4-fpm
