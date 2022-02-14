@@ -38,6 +38,7 @@ case $choise in
 	sed -i 's/#chown_username=whoever/chown_username=www-data/' /etc/vsftpd.conf
 	echo "allow_writeable_chroot=YES" >> /etc/vsftpd.conf
 	touch /etc/vsftpd.chroot_list
+	systemctl restart vsftpd
 	;;
 	
 	2)
