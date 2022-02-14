@@ -33,6 +33,10 @@ case $choise in
 	sed -i 's/#chroot_list_enable=YES/chroot_list_enable=YES/' /etc/vsftpd.conf
 	sed -i 's/#chroot_list_file=\/etc\/vsftpd.chroot_list/chroot_list_file=\/etc\/vsftpd.chroot_list/' /etc/vsftpd.conf
 	sed -i 's/ssl_enable=NO/ssl_enable=YES/' /etc/vsftpd.conf
+	sed -i 's/#xferlog_file=\/var\/log\/vsftpd.log/xferlog_file=\/var\/log\/vsftpd.log/' /etc/vsftpd.conf
+	sed -i 's/#chown_uploads=YES/chown_uploads=YES/' /etc/vsftpd.conf
+	sed -i 's/#chown_username=whoever/chown_username=www-data/' /etc/vsftpd.conf
+	touch /etc/vsftpd.chroot_list
 	;;
 	
 	2)
