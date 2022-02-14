@@ -28,7 +28,6 @@ case $choise in
 dirlist_enable=YES
 file_open_mode=0755" >> /etc/vsftpd.conf
 	echo "<?php phpinfo(); ?>" > /var/www/html/index.php
-	systemctl restart nginx vsftpd
 	read -p "You must create the first account for FTP :
 What's the username ?
 " username
@@ -37,6 +36,7 @@ What's the username ?
 	mv /etc/vsftpd.conf /etc/vsftpd
 	echo $username > /etc/vsftpd/vsftpd.chroot_list
 	usermod -a -G www-data $username
+	systemctl restart nginx vsftpd
 	;;
 	
 	2)
