@@ -36,9 +36,14 @@ case $choise in
 	sed -i 's/#xferlog_file=\/var\/log\/vsftpd.log/xferlog_file=\/var\/log\/vsftpd.log/' /etc/vsftpd.conf
 	sed -i 's/#chown_uploads=YES/chown_uploads=YES/' /etc/vsftpd.conf
 	sed -i 's/#chown_username=whoever/chown_username=www-data/' /etc/vsftpd.conf
-	echo "allow_writeable_chroot=YES" >> /etc/vsftpd.conf
-	touch /etc/vsftpd.chroot_list
+	echo "allow_writeable_chroot=YES
+dirlist_enable=YES" >> /etc/vsftpd.conf
 	systemctl restart vsftpd
+	read -p "You must create the first account for FTP :
+What's the username ?
+" username
+	adduser $username
+	echo $username > /etc/vsftpd.chroot_list
 	;;
 	
 	2)
