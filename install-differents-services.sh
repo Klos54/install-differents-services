@@ -36,7 +36,7 @@ What's the username ?
 	echo $username > /etc/vsftpd/vsftpd.chroot_list
 	usermod -a -G www-data $username
 	chown -R www-data:www-data /var/www
-	chmod -R 755 /var/www
+	chmod -R 774 /var/www
 	systemctl daemon-reload
 	systemctl restart nginx vsftpd
 	;;
