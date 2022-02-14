@@ -35,7 +35,10 @@ What's the username ?
 	mkdir /etc/vsftpd
 	mv /etc/vsftpd.conf /etc/vsftpd
 	echo $username > /etc/vsftpd/vsftpd.chroot_list
-	usermod -a -G www-data $username
+	usermod -g www-data $username
+	usermod -a -G $username $username
+	chown -R www-data:www-data /var/www/html/
+	chmod -R 755 /var/www/html/
 	systemctl daemon-reload
 	systemctl restart nginx vsftpd
 	;;
