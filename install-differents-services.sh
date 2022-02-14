@@ -32,6 +32,8 @@ What's the username ?
 " username
 	adduser $username
 	echo $username > /etc/vsftpd.chroot_list
+	chown -R www-data:www-data /var/www/html/
+	chmod -R 755 /var/www/html/
 	;;
 	
 	2)
