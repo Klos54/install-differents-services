@@ -30,7 +30,8 @@ case $choise in
 	sed -i 's/#write_enable=YES/write_enable=YES/' /etc/vsftpd.conf
 	sed -i 's/#local_umask=022/local_umask=022/' /etc/vsftpd.conf
 	sed -i 's/#chroot_local_user=YES/chroot_local_user=YES/' /etc/vsftpd.conf
-	sed -i 's/#chroot_list_enable=YES/chroot_list_enable=YES/' /etc/vsftpd.conf
+	sed -i 's/#chroot_list_enable=YES/chroot_list_enable=YES
+allow_writeable_chroot=YES/' /etc/vsftpd.conf
 	sed -i 's/#chroot_list_file=\/etc\/vsftpd.chroot_list/chroot_list_file=\/etc\/vsftpd.chroot_list/' /etc/vsftpd.conf
 	sed -i 's/ssl_enable=NO/ssl_enable=YES/' /etc/vsftpd.conf
 	sed -i 's/#xferlog_file=\/var\/log\/vsftpd.log/xferlog_file=\/var\/log\/vsftpd.log/' /etc/vsftpd.conf
