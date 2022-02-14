@@ -41,19 +41,17 @@ What's the username ?
 	apt update
 	apt upgrade -y
 	apt install -y zabbix-server-mysql zabbix-frontend-php zabbix-nginx-conf zabbix-sql-scripts zabbix-agent mariadb-server
-	echo "Mot de passe de l'utilisateur mysql zabbix"
-	read -p "Password for mysql zabbix user:
-	" password
+	read -p "Mot de passe de l'utilisateur mysql zabbix:
+Password for mysql zabbix user:
+" password
 	echo "create database zabbix character set utf8 collate utf8_bin;" | mysql
 	echo "create user zabbix@localhost identified by '$password';" | mysql
 	echo "grant all privileges on zabbix.* to zabbix@localhost;" | mysql
-	echo "Entrez à nouveau votre mot de passe récemment créé"
-	echo "Enter again your password recently created"
+	echo "Entrez à nouveau votre mot de passe récemment créé
+Enter again your password recently created"
 	zcat /usr/share/doc/zabbix-sql-scripts/mysql/create.sql.gz | mysql -uzabbix -p zabbix
-	sed -i "s/# DBPassword=/# DBPassword=
-	DBPassword\=$password/" /etc/zabbix/zabbix_server.conf
-	sed -i 's/listen 80 default_server;/#listen 80 default_server;/' /etc/nginx/sites-enabled/default
-	sed -i 's/listen [::]:80 default_server;/#listen [::]:80 default_server;/' /etc/nginx/sites-enabled/default
+	sed -i {'s/# DBPassword=/# DBPassword=
+DBPassword\=$password/;s/listen 80 default_server\;/#listen 80 default_server\;/s/listen [::]:80 default_server\;/#listen [::]:80 default_server\;/'} /etc/zabbix/zabbix_server.conf
 	systemctl restart zabbix-server zabbix-agent nginx php7.4-fpm
 	systemctl enable zabbix-server zabbix-agent nginx php7.4-fpm
 	;;
@@ -66,7 +64,8 @@ What's the username ?
 	apt upgrade -y
 	apt install zabbix-agent -y
 	read -p "Quelle est l'adresse du serveur Zabbix ?
-	" host
+What's Zabbix server addresse ?
+" host
 	sed -i "s/Server=127.0.0.1/Server\=$host/" /etc/zabbix/zabbix_agentd.conf
 	systemctl restart zabbix-agent.service
 	;;
@@ -75,23 +74,29 @@ What's the username ?
 	apt update
 	apt upgrade -y
 	apt install -y nginx php7.4 php7.4-fpm php-mysqli php-mbstring php-curl php-gd php-simplexml php-intl php-ldap php-apcu php-xmlrpc php-zip php-bz2 mariadb-server
-	#In a short time
 	systemctl restart nginx
-	read -p "You must create a new SQL user to manager GLPI:
-	" user
-	read -p "Password for $user ?
-	" password
+	read -p "Vous devez créer un utilisateur SQL pour gérer GLPI
+You must create a new SQL user to manager GLPI:
+" user
+	read -p "Quel est le mot de passe de l'utilisateur $user ?
+Password for $user ?
+" password
 	echo "CREATE DATABSE namedb;" | mysql
 	echo "GRANT ALL PRIVILEGES ON glpidb.* TO 'glpiuser'@'localhost' IDENTIFIED BY 'password';" | mysql
 	echo "FLUSH PRIVILEGES;" | mysql
+	cd /var/www/html
 	wget https://github.com/glpi-project/glpi/releases/download/9.5.7/glpi-9.5.7.tgz
 	tar -xvf glpi-*.tgz
-	mv glpi /var/www/html/
+	rm  glpi*.tgz
 	chown -R www-data:www-data /var/www/html/
 	chmod -R 755 /var/www/html/
 	;;
 	
 	5)
 	
+	;;
+
+	6)
+
 	;;
 esac
