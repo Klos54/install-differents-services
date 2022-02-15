@@ -18,16 +18,18 @@ read -p "	Choose a number on this list:
 
 case $choise in
 	1)
+	cd /tmp
 	apt update
 	apt upgrade -y
 	apt install -y nginx mariadb-server php-fpm vsftpd php-mysql
+	rm -rf /var/www/html
 	sed -i 56,63{'s/#//;s/fastcgi_pass 127.0.0.1:9000\;/#fastcgi_pass 127.0.0.1:9000\;/'} /etc/nginx/sites-enabled/default
-	sed -i 's/index index.html index.htm index.nginx-debian.html;/index index.php index.html index.htm;/' /etc/nginx/sites-enabled/default
+	sed -i 's/index index.html index.htm index.nginx-debian.html;/index index.php index.html index.htm;/;s/root /var/www/html\;/root /var/www\;/' /etc/nginx/sites-enabled/default
 	sed -i {'s/listen=NO/listen=YES/;s/listen_ipv6=YES/listen_ipv6=NO/;s/#write_enable=YES/write_enable=YES/;s/#chroot_local_user=YES/chroot_local_user=YES/;s/#chroot_list_enable=YES/chroot_list_enable=YES/;s/#chroot_list_file=\/etc\/vsftpd.chroot_list/chroot_list_file=\/etc\/vsftpd\/vsftpd.chroot_list/;s/ssl_enable=NO/ssl_enable=YES/;s/#xferlog_file=\/var\/log\/vsftpd.log/xferlog_file=\/var\/log\/vsftpd.log/;s/#chown_uploads=YES/chown_uploads=YES/;s/#local_umask=022/local_umask=022/'} /etc/vsftpd.conf
 	sed -i 's/ExecStart=\/usr\/sbin\/vsftpd \/etc\/vsftpd.conf/ExecStart=\/usr\/sbin\/vsftpd \/etc\/vsftpd\/vsftpd.conf/' /lib/systemd/system/vsftpd.service
 	echo "allow_writeable_chroot=YES
 dirlist_enable=YES" >> /etc/vsftpd.conf
-	echo "<?php phpinfo(); ?>" > /var/www/html/index.php
+	echo "<?php phpinfo(); ?>" > /var/www/index.php
 	read -p "You must create the first user with all privileges :
 What's the username ?
 " username
@@ -42,7 +44,7 @@ What's the username ?
 	echo $username > /etc/vsftpd/vsftpd.chroot_list
 	usermod -a -G www-data $username
 	wget https://github.com/vrana/adminer/releases/download/v4.8.1/adminer-4.8.1.php
-	mv adminer-*.php /var/www/html/adminer.php
+	mv adminer-*.php /var/www/adminer.php
 	chown -R www-data:www-data /var/www
 	chmod -R 774 /var/www
 	mysql_secure_installation
