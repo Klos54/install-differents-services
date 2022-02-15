@@ -28,10 +28,15 @@ case $choise in
 	echo "allow_writeable_chroot=YES
 dirlist_enable=YES" >> /etc/vsftpd.conf
 	echo "<?php phpinfo(); ?>" > /var/www/html/index.php
-	read -p "You must create the first account for FTP :
+	read -p "You must create the first user with all privileges :
 What's the username ?
 " username
+	read -p "What's the password for user $username ?
+" password
 	adduser $username
+	echo "CREATE USER '$username'@'localhost' IDENTIFIED BY '$password';" | mysql
+	echo "GRANT ALL ON *.* TO '$username'@'localhost';" | mysql
+	echo "FLUSH PRIVILEGES;" | mysql
 	mkdir /etc/vsftpd
 	mv /etc/vsftpd.conf /etc/vsftpd
 	echo $username > /etc/vsftpd/vsftpd.chroot_list
@@ -40,14 +45,6 @@ What's the username ?
 	mv adminer-*.php /var/www/html/adminer.php
 	chown -R www-data:www-data /var/www
 	chmod -R 774 /var/www
-	read -p "You must create a new SQL user with privileges
-What's the username ?
-" user
-	read -p "What's the password for user $user ?
-" password
-	echo "CREATE USER '$user'@'localhost' IDENTIFIED BY '$password';" | mysql
-	echo "GRANT ALL ON *.* TO '$user'@'localhost';" | mysql
-	echo "FLUSH PRIVILEGES;" | mysql
 	mysql_secure_installation
 	systemctl daemon-reload
 	systemctl restart nginx vsftpd
@@ -103,8 +100,8 @@ What's Zabbix server addresse ?
 	wget https://github.com/glpi-project/glpi/releases/download/9.5.7/glpi-9.5.7.tgz
 	tar -xvf glpi-*.tgz
 	rm  glpi*.tgz
-	chown -R www-data:www-data /var/www/html/
-	chmod -R 755 /var/www/html/
+	chown -R www-data:www-data /var/www
+	chmod -R 774 /var/www
 	;;
 	
 	5)
