@@ -7,19 +7,20 @@ fi
 
 clear
 read -p "	Choose a number on this list:
-	1 - Install Nginx, Mariadb and Vsftpd
+	1 - Install Nginx, Mariadb, Adminer and Vsftpd
 	2 - Install Zabbix Server v5.4, Mariadb, Nginx with php-fpm v7.4
 	3 - Deploy Zabbix Agent to connect to Zabbix Server
 	4 - Install GLPI (in a short time)
-	5 - OpenVPN (in a short time)
-	6 - WireGuard (in a short time)
+	5 - OpenVPN
+	6 - WireGuard
+	7 - Pi-Hole
 " choise
 
 case $choise in
 	1)
 	apt update
 	apt upgrade -y
-	apt install -y nginx mariadb-server php-fpm vsftpd
+	apt install -y nginx mariadb-server php-fpm vsftpd php-mysql
 	sed -i 56,63{'s/#//;s/fastcgi_pass 127.0.0.1:9000\;/#fastcgi_pass 127.0.0.1:9000\;/'} /etc/nginx/sites-enabled/default
 	sed -i 's/index index.html index.htm index.nginx-debian.html;/index index.php index.html index.htm;/' /etc/nginx/sites-enabled/default
 	sed -i {'s/listen=NO/listen=YES/;s/listen_ipv6=YES/listen_ipv6=NO/;s/#write_enable=YES/write_enable=YES/;s/#chroot_local_user=YES/chroot_local_user=YES/;s/#chroot_list_enable=YES/chroot_list_enable=YES/;s/#chroot_list_file=\/etc\/vsftpd.chroot_list/chroot_list_file=\/etc\/vsftpd\/vsftpd.chroot_list/;s/ssl_enable=NO/ssl_enable=YES/;s/#xferlog_file=\/var\/log\/vsftpd.log/xferlog_file=\/var\/log\/vsftpd.log/;s/#chown_uploads=YES/chown_uploads=YES/;s/#local_umask=022/local_umask=022/'} /etc/vsftpd.conf
@@ -35,8 +36,19 @@ What's the username ?
 	mv /etc/vsftpd.conf /etc/vsftpd
 	echo $username > /etc/vsftpd/vsftpd.chroot_list
 	usermod -a -G www-data $username
+	wget https://github.com/vrana/adminer/releases/download/v4.8.1/adminer-4.8.1.php
+	mv adminer-*.php /var/www/html/adminer.php
 	chown -R www-data:www-data /var/www
 	chmod -R 774 /var/www
+	read -p "You must create a new SQL user with privileges
+What's the username ?
+" user
+	read -p "What's the password for user $user ?
+" password
+	echo "CREATE USER '$user'@'localhost' IDENTIFIED BY '$password';" | mysql
+	echo "GRANT ALL ON *.* TO '$user'@'localhost';" | mysql
+	echo "FLUSH PRIVILEGES;" | mysql
+	mysql_secure_installation
 	systemctl daemon-reload
 	systemctl restart nginx vsftpd
 	;;
@@ -48,14 +60,12 @@ What's the username ?
 	apt update
 	apt upgrade -y
 	apt install -y zabbix-server-mysql zabbix-frontend-php zabbix-nginx-conf zabbix-sql-scripts zabbix-agent mariadb-server
-	read -p "Mot de passe de l'utilisateur mysql zabbix:
-Password for mysql zabbix user:
+	read -p "Password for mysql zabbix user:
 " password
 	echo "create database zabbix character set utf8 collate utf8_bin;" | mysql
 	echo "create user zabbix@localhost identified by '$password';" | mysql
 	echo "grant all privileges on zabbix.* to zabbix@localhost;" | mysql
-	echo "Entrez à nouveau votre mot de passe récemment créé
-Enter again your password recently created"
+	echo "Enter again your password recently created"
 	zcat /usr/share/doc/zabbix-sql-scripts/mysql/create.sql.gz | mysql -uzabbix -p zabbix
 	sed -i {'s/# DBPassword=/# DBPassword=
 DBPassword\=$password/;s/listen 80 default_server\;/#listen 80 default_server\;/s/listen [::]:80 default_server\;/#listen [::]:80 default_server\;/'} /etc/zabbix/zabbix_server.conf
@@ -82,14 +92,12 @@ What's Zabbix server addresse ?
 	apt upgrade -y
 	apt install -y nginx php7.4 php7.4-fpm php-mysqli php-mbstring php-curl php-gd php-simplexml php-intl php-ldap php-apcu php-xmlrpc php-zip php-bz2 mariadb-server
 	systemctl restart nginx
-	read -p "Vous devez créer un utilisateur SQL pour gérer GLPI
-You must create a new SQL user to manager GLPI:
+	read -p "You must create a new SQL user to manager GLPI:
 " user
-	read -p "Quel est le mot de passe de l'utilisateur $user ?
-Password for $user ?
+	read -p "What's the password for user $user ?
 " password
-	echo "CREATE DATABSE namedb;" | mysql
-	echo "GRANT ALL PRIVILEGES ON glpidb.* TO 'glpiuser'@'localhost' IDENTIFIED BY 'password';" | mysql
+	echo "CREATE DATABSE glpi;" | mysql
+	echo "GRANT ALL PRIVILEGES ON glpi.* TO '$user'@'localhost' IDENTIFIED BY '$password';" | mysql
 	echo "FLUSH PRIVILEGES;" | mysql
 	cd /var/www/html
 	wget https://github.com/glpi-project/glpi/releases/download/9.5.7/glpi-9.5.7.tgz
@@ -100,10 +108,17 @@ Password for $user ?
 	;;
 	
 	5)
-	
+	echo "Visite https://github.com/Nyr"
 	;;
 
 	6)
+	echo "Visite https://github.com/Nyr"
+	;;
 
+	7)
+	apt update
+	apt upgrade -y
+	apt install -y curl
+	curl -sSL https://install.pi-hole.net | bash
 	;;
 esac
