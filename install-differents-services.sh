@@ -8,7 +8,7 @@ fi
 clear
 read -p "	Choose a number on this list:
 	1 - Install Nginx, Mariadb, Adminer and Vsftpd
-	2 - Install Zabbix Server v5.4, Mariadb, Nginx with php-fpm v7.4
+	2 - Install Zabbix Server v6, Mariadb, Nginx with php-fpm v7.4
 	3 - Deploy Zabbix Agent to connect to Zabbix Server
 	4 - Install GLPI (in a short time)
 	5 - OpenVPN
@@ -74,8 +74,8 @@ What's the username ?
 	
 	3)
 	cd /tmp
-	wget https://repo.zabbix.com/zabbix/5.4/debian/pool/main/z/zabbix-release/zabbix-release_5.4-1+debian11_all.deb
-	dpkg -i zabbix-release_5.4-1+debian11_all.deb
+	wget https://repo.zabbix.com/zabbix/6.0/debian/pool/main/z/zabbix-release/zabbix-release_6.0-1+debian11_all.deb
+	dpkg -i zabbix-release_6.0-1+debian11_all.deb
 	apt update
 	apt upgrade -y
 	apt install zabbix-agent -y
