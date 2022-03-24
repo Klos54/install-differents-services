@@ -70,7 +70,7 @@ What's the username ?
 	sed -i {'s/# DBPassword=/DBPassword\=$password/'} /etc/zabbix/zabbix_server.conf
 	systemctl restart zabbix-server zabbix-agent nginx php7.4-fpm
 	systemctl enable zabbix-server zabbix-agent nginx php7.4-fpm
-	export LANG=en_US.UTF-8
+	dpkg-reconfigure locales
 	;;
 	
 	3)
