@@ -70,6 +70,7 @@ What's the username ?
 DBPassword\=$password/;s/listen 80 default_server\;/#listen 80 default_server\;/s/listen [::]:80 default_server\;/#listen [::]:80 default_server\;/'} /etc/zabbix/zabbix_server.conf
 	systemctl restart zabbix-server zabbix-agent nginx php7.4-fpm
 	systemctl enable zabbix-server zabbix-agent nginx php7.4-fpm
+	dpkg-reconfigure locales
 	;;
 	
 	3)
