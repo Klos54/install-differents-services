@@ -62,7 +62,7 @@ What's the username ?
 	sed -i {'s/listen 80 default_server;/# listen 80 default_server;/;s/listen \[::\]:80 default_server;/# listen [::]:80 default_server;/'} /etc/nginx/sites-enabled/default
 	read -p "Password for mysql zabbix user:
 " password
-	echo "create database zabbix character set utf8 collate utf8_bin;" | mysql
+	echo "create database zabbix character set utf8mb4 collate utf8mb4_bin;" | mysql
 	echo "create user zabbix@localhost identified by '$password';" | mysql
 	echo "grant all privileges on zabbix.* to zabbix@localhost;" | mysql
 	echo "Enter again your password recently created"
