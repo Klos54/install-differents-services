@@ -59,7 +59,7 @@ What's the username ?
 	apt update
 	apt upgrade -y
 	apt install -y zabbix-server-mysql zabbix-frontend-php zabbix-nginx-conf zabbix-sql-scripts zabbix-agent mariadb-server
-	sed -i {'s/listen 80 default_server;/# listen 80 default_server;/;s/listen [::]:80 default_server;/#listen [::]:80 default_server;/'} /etc/nginx/sites-enabled/default
+	sed -i {'s/listen 80 default_server;/# listen 80 default_server;/s/listen \[::\]:80 default_server;/# listen [::]:80 default_server;/'} /etc/nginx/sites-enabled/default
 	read -p "Password for mysql zabbix user:
 " password
 	echo "create database zabbix character set utf8 collate utf8_bin;" | mysql
